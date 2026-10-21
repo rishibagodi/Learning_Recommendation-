@@ -1,162 +1,115 @@
-# OULAD Learning Resource Recommendation System
+# AI-Based Learning Recommendation System (v2)
 
-An AI-based personalized learning resource recommendation system built as an academic course project. Uses **K-Means clustering** on student engagement behavior and **content-based filtering** (TF-IDF + cosine similarity) to recommend resources targeted at each student's weak topic areas, with natural-language explanations for every recommendation.
+A student signs up, picks a domain and goal, takes a short skill check, and gets a **personalized roadmap** with **YouTube videos, docs and practice resources** for each step. Every recommendation comes with a reason. The roadmap adapts after a mini-quiz on each step.
 
-## Dataset
+## How it works
 
-- **Source**: [Open University Learning Analytics Dataset (OULAD)](https://analyse.kmi.open.ac.uk/open-dataset) — CC-BY 4.0 license
-- **Downloaded from**: Official OU Analyse website
-- **Files** (7 CSVs in `data/raw/`):
-  - `courses.csv` — Module/presentation info
-  - `assessments.csv` — Assessment metadata
-  - `vle.csv` — Virtual Learning Environment resource catalog
-  - `studentInfo.csv` — Student demographics
-  - `studentRegistration.csv` — Enrollment data
-  - `studentAssessment.csv` — Student assessment scores
-  - `studentVle.csv` — Student click-level VLE interactions (~10.6M rows)
+| Stage | What happens | Technique | Code |
+|---|---|---|---|
+| 1. Onboarding | Domain, goal, level, preferred format (video / reading / practice), hours and days per week | Learner feature vector | `main.py` → `/api/onboarding` |
+| 2. Learner profile | Assigns a profile such as "practice-driven fast learner" | K-Means trained on OULAD click behaviour; rule-based fallback until trained | `profile_model.py` |
+| 3. Skill check | 2 MCQs per topic; full marks = topic skipped, partial = shorter estimate | Score per topic | `/api/quiz/skill` |
+| 4. Roadmap | Goal → required topics (prerequisite closure) → ordered, known topics skipped, weeks estimated | Skill graph + topological sort (Kahn) | `roadmap.py` |
+| 5. Recommendations | Ranks the topic's videos and links for this learner | TF-IDF + cosine similarity × format boost × profile boost × difficulty match × session-length fit × popularity | `recommender.py` |
+| 6. Explanations | e.g. "Matches your preference for videos; beginner level, right for you now; 20 min fits one study session" | Explainable output | `recommender.explain` |
+| 7. Adapt | 3-question check per step: pass → completed, next unlocks; fail → "revise", resources shift to basics | Feedback loop | `/api/steps/{topic}/quiz` |
 
-## Architecture
+**Domains (MVP):** Web Development, Data Science, AI / Machine Learning. Each has 3 goals, 8 topics with prerequisites, 3 MCQs per topic and curated links. Edit or add domains in `backend/app/domains/*.json`; no code change is needed.
 
-```
-┌──────────────────────────────────────────────────────────┐
-│  Frontend (React + TypeScript + Recharts)                │
-│  ├── Student Selector (searchable dropdown)              │
-│  ├── Profile Panel (cluster, pace, weak topics)          │
-│  ├── Recommendations Panel (top-N with explanations)     │
-│  ├── Cluster Visualization (PCA scatter plot)            │
-│  └── Evaluation Tab (ablation study bar charts)          │
-├──────────────────────────────────────────────────────────┤
-│  Backend (Python + FastAPI)                              │
-│  ├── Stage 1: Preprocessing (engagement matrix)          │
-│  ├── Stage 2: Weak-topic detection                       │
-│  ├── Stage 3: K-Means clustering (elbow + silhouette)    │
-│  ├── Stage 4: Resource catalog + TF-IDF vectorization    │
-│  ├── Stage 5: Hybrid recommendation (filter → rank)      │
-│  └── Stage 6: Evaluation (Precision@k, Recall@k)        │
-└──────────────────────────────────────────────────────────┘
-```
+## Setup
 
-## ML Pipeline Details
+**Requirements:** Python 3.10+, Node.js 18+.
 
-### 1. Preprocessing
-- Merges `studentVle` + `vle` to build per-student content-type engagement matrix
-- Activity types bucketed into 4 categories:
-  - **structured_content**: oucontent, resource, subpage, url, page
-  - **interactive_quiz**: quiz, externalquiz
-  - **discussion_social**: forumng, ouwiki, ouelluminate, oucollaborate
-  - **other**: anything else
-- Features: % of total clicks per bucket + pace features (active_days, clicks_per_active_day)
-
-### 2. Weak-Topic Detection
-- Merges `studentAssessment` + `assessments` to compute per-student average score per module
-- Flags modules where a student's score < their own global average as "weak areas"
-
-### 3. K-Means Clustering
-- Clusters students on engagement-bucket percentages + pace features (StandardScaler applied)
-- Elbow method + silhouette score used to justify k (tested k=3 to 6)
-- Each cluster is named/interpreted based on its centroid (e.g., "quiz-driven fast learner")
-
-### 4. Resource Catalog
-- Built from `vle.csv`, each resource tagged with topic (code_module) and format (bucketed activity type)
-- Vectorized with TF-IDF
-
-### 5. Hybrid Recommendation (Staged)
-- **Stage 1**: Filter catalog to resources tagged with student's weak topic(s)
-- **Stage 2**: Rank by cosine similarity to student profile, boosted (1.3×) by cluster's dominant content-type preference
-- Returns top-N with one-line natural-language explanation per recommendation
-
-### 6. Evaluation
-- **Precision@k** and **Recall@k** via 70/30 holdout of student VLE interactions
-- **Ablation study**: content-based-only vs. hybrid (content-based + clustering)
-- Demonstrates that clustering measurably improves hit rate
-
-## How to Run
-
-### Prerequisites
-- Python 3.10+ 
-- Node.js 18+
-- npm 9+
-
-### Backend
+### 1. Backend
 
 ```bash
 cd backend
-
-# Install dependencies
 pip install -r requirements.txt
-
-# Run the data pipeline (first time — processes ~430MB of data, takes ~2 min)
-python -m app.pipeline
-
-# Start the API server (loads cached pipeline state)
-python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+cp .env.example .env        # Windows: copy .env.example .env
 ```
 
-The pipeline prints silhouette scores, chosen k, and ablation study results to the console.
+Fill in `backend/.env`:
 
-### Frontend
+- `YOUTUBE_API_KEY`: in [Google Cloud Console](https://console.cloud.google.com/), create a project → APIs & Services → Library → enable **YouTube Data API v3** → Credentials → Create credentials → API key.
+- `JWT_SECRET`: any random string of 32+ characters.
+
+Start the API:
+
+```bash
+uvicorn app.main:app --reload --port 8000
+```
+
+Videos are fetched from YouTube the first time a student opens a step, then cached in `app.db`. To fetch everything up front (about 2,500 of the 10,000 free daily quota units):
+
+```bash
+python -m app.content fetch
+```
+
+Without a key the app still works and shows the curated docs and practice links.
+
+### 2. Frontend
 
 ```bash
 cd frontend
-
-# Install dependencies
 npm install
-
-# Start dev server (proxies /api to localhost:8000)
-npm run dev
+npm run dev          # http://localhost:5173 (proxies /api to :8000)
 ```
 
-Open http://localhost:5173 in your browser.
+For a single-server demo, run `npm run build`; the backend then serves the built site at http://localhost:8000.
 
-## API Endpoints
+### 3. Optional: train the learner-profile model on OULAD
 
-| Endpoint | Description |
-|----------|-------------|
-| `GET /api/students?limit=100&offset=0` | List students with ID, cluster label, basic info |
-| `GET /api/students/{id}` | Full profile: cluster, pace stats, weak topics |
-| `GET /api/students/{id}/recommendations?n=5` | Ranked resources + explanation strings |
-| `GET /api/clusters` | Cluster centroids + PCA 2D coordinates per student |
-| `GET /api/evaluation` | Precision@k / Recall@k for both ablation variants |
+Put the OULAD `vle.csv` and `studentVle.csv` in `data/raw/` ([download](https://analyse.kmi.open.ac.uk/open-dataset)), then:
 
-## Project Structure
-
-```
-├── backend/
-│   ├── app/
-│   │   ├── __init__.py
-│   │   ├── pipeline.py          # Full ML pipeline (6 stages)
-│   │   └── main.py              # FastAPI endpoints
-│   └── requirements.txt
-├── frontend/
-│   ├── src/
-│   │   ├── api.ts               # Typed API client
-│   │   ├── App.tsx              # Main app shell
-│   │   ├── App.css              # Component styles
-│   │   ├── index.css            # Design system
-│   │   ├── main.tsx             # Entry point
-│   │   └── components/
-│   │       ├── StudentSelector.tsx
-│   │       ├── ProfilePanel.tsx
-│   │       ├── RecommendationsPanel.tsx
-│   │       ├── ClusterViz.tsx
-│   │       └── EvaluationPanel.tsx
-│   ├── index.html
-│   ├── package.json
-│   └── vite.config.ts
-├── data/
-│   ├── raw/                     # OULAD CSV files (not committed)
-│   └── processed/               # Cached pipeline state
-└── README.md
+```bash
+cd backend
+python -m app.profile_model train      # k=4 by default; prints silhouette and cluster sizes
 ```
 
-## Design Decisions
+This saves `data/processed/profile_model.pkl`; restart the API to use it. A new user's answers are mapped onto the same 6 behaviour features using OULAD percentiles (for example, "prefers practice" → 90th percentile of quiz-click share), then assigned to the nearest cluster. This mapping is an approximation: OULAD has click data, not questionnaire answers.
 
-- **No deep learning / collaborative filtering**: Intentionally scoped to K-Means + content-based filtering since OULAD has no explicit rating signal
-- **Staged (not blended) recommendation**: Filter first by weak topics, then rank — makes the pipeline explainable
-- **Explanation strings**: Every recommendation includes a human-readable reason, critical for academic transparency
-- **Ablation study**: Demonstrates the marginal value of clustering — hybrid approach nearly doubles precision
+## API
 
-## License
+| Method | Endpoint | Purpose |
+|---|---|---|
+| POST | `/api/auth/signup`, `/api/auth/login` | Returns a JWT |
+| GET | `/api/me` | User, stage (`onboarding` / `quiz` / `ready`), profile, model info |
+| GET | `/api/domains` | Domains, goals, topics |
+| POST | `/api/onboarding` | Save answers, assign learner profile |
+| GET/POST | `/api/quiz/skill` | Skill-check questions / submit, which builds the roadmap |
+| GET | `/api/roadmap` | Steps with status, hours, weeks, progress |
+| GET | `/api/steps/{topic_key}` | Ranked resources with reasons |
+| POST | `/api/resources/{id}/progress` | Mark done / helpful |
+| GET/POST | `/api/steps/{topic_key}/quiz` | Mini-quiz / submit |
+| DELETE | `/api/profile` | Start over with a new goal |
 
-Dataset: CC-BY 4.0 (Open University Learning Analytics Dataset)
-Code: MIT
+Interactive docs: http://localhost:8000/docs
+
+## Project structure
+
+```
+backend/
+  app/
+    main.py            FastAPI routes
+    auth.py            signup/login, PBKDF2 hashes, JWT
+    db.py              SQLite schema + helpers (app.db is created automatically)
+    content.py         domain loader, curated links, YouTube Data API fetch + cache
+    profile_model.py   K-Means learner profiles (train on OULAD / assign new users)
+    roadmap.py         prerequisite closure + topological sort + progress view
+    recommender.py     hybrid TF-IDF ranking + explanations
+    pipeline.py        v1 OULAD pipeline (reused for profile features)
+    domains/           web_dev.json, data_science.json, ai_ml.json
+  .env.example
+frontend/src/
+  App.tsx              stage routing
+  api.ts               typed API client
+  pages/               Auth, Onboarding, SkillQuiz, Dashboard, StepView, QuizForm
+```
+
+## Notes and limits
+
+- The curated links in the domain files were written by hand; click through them once before a demo.
+- The YouTube free quota is 10,000 units a day; each topic search costs about 101 units. Results are cached, so each topic is searched once.
+- Future work: LLM-generated roadmaps for any domain, collaborative filtering ("students like you also watched") from the helpful/done feedback, a teacher view, streaks and reminders.
+
+Dataset (optional profile model): OULAD, CC-BY 4.0. Code: MIT.

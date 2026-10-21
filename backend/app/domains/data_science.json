@@ -1,0 +1,124 @@
+{
+  "id": "data_science",
+  "name": "Data Science",
+  "description": "Analyse data with Python, SQL and statistics, and build your first ML models.",
+  "goals": [
+    {"id": "analyst", "name": "Become a data analyst", "targets": ["sql", "eda"]},
+    {"id": "scientist", "name": "Become a data scientist", "targets": ["ml_basics", "sql"]},
+    {"id": "python_data", "name": "Learn Python for data analysis", "targets": ["pandas", "visualization"]}
+  ],
+  "topics": [
+    {
+      "id": "python", "name": "Python Basics", "prereqs": [], "difficulty": 1, "hours": 12,
+      "keywords": ["python", "variables", "lists", "dictionaries", "functions", "loops", "programming"],
+      "youtube_query": "Python tutorial for beginners full course",
+      "resources": [
+        {"kind": "article", "title": "The Python Tutorial (official docs)", "url": "https://docs.python.org/3/tutorial/", "difficulty": 1},
+        {"kind": "practice", "title": "Kaggle Learn: Python", "url": "https://www.kaggle.com/learn/python", "difficulty": 1}
+      ],
+      "questions": [
+        {"q": "What does len([3, 5, 7]) return?", "options": ["2", "3", "7", "15"], "answer": 1},
+        {"q": "Which data type stores key-value pairs?", "options": ["list", "tuple", "dict", "set"], "answer": 2},
+        {"q": "What is the output of [x for x in range(4) if x % 2 == 0]?", "options": ["[0, 2]", "[1, 3]", "[0, 1, 2, 3]", "[2, 4]"], "answer": 0}
+      ]
+    },
+    {
+      "id": "numpy", "name": "NumPy", "prereqs": ["python"], "difficulty": 1, "hours": 6,
+      "keywords": ["numpy", "arrays", "ndarray", "vectorization", "broadcasting", "matrix"],
+      "youtube_query": "NumPy tutorial for beginners",
+      "resources": [
+        {"kind": "article", "title": "NumPy: the absolute basics for beginners", "url": "https://numpy.org/doc/stable/user/absolute_beginners.html", "difficulty": 1},
+        {"kind": "practice", "title": "100 NumPy exercises", "url": "https://github.com/rougier/numpy-100", "difficulty": 2}
+      ],
+      "questions": [
+        {"q": "What does np.arange(5) produce?", "options": ["array([1, 2, 3, 4, 5])", "array([0, 1, 2, 3, 4])", "array([5])", "a list of 5 zeros"], "answer": 1},
+        {"q": "What is the shape of np.zeros((3, 4))?", "options": ["(4, 3)", "(12,)", "(3, 4)", "(3,)"], "answer": 2},
+        {"q": "Why are NumPy operations usually faster than Python loops?", "options": ["They run vectorized in compiled code", "They use the GPU by default", "They skip calculations", "They cache results on disk"], "answer": 0}
+      ]
+    },
+    {
+      "id": "pandas", "name": "Pandas", "prereqs": ["numpy"], "difficulty": 2, "hours": 12,
+      "keywords": ["pandas", "dataframe", "series", "groupby", "merge", "csv", "data cleaning"],
+      "youtube_query": "Pandas tutorial data analysis python",
+      "resources": [
+        {"kind": "article", "title": "10 minutes to pandas", "url": "https://pandas.pydata.org/docs/user_guide/10min.html", "difficulty": 1},
+        {"kind": "practice", "title": "Kaggle Learn: Pandas", "url": "https://www.kaggle.com/learn/pandas", "difficulty": 2}
+      ],
+      "questions": [
+        {"q": "Which function reads a CSV file into a DataFrame?", "options": ["pd.load_csv()", "pd.read_csv()", "pd.open()", "pd.DataFrame.csv()"], "answer": 1},
+        {"q": "What does df.groupby('city')['sales'].sum() return?", "options": ["Total sales per city", "Number of cities", "Sorted DataFrame", "Mean sales"], "answer": 0},
+        {"q": "Which method drops rows with missing values?", "options": ["df.fillna()", "df.dropna()", "df.isna()", "df.remove()"], "answer": 1}
+      ]
+    },
+    {
+      "id": "visualization", "name": "Data Visualization", "prereqs": ["pandas"], "difficulty": 1, "hours": 6,
+      "keywords": ["visualization", "matplotlib", "seaborn", "charts", "plots", "histogram", "scatter"],
+      "youtube_query": "Matplotlib Seaborn data visualization tutorial",
+      "resources": [
+        {"kind": "practice", "title": "Kaggle Learn: Data Visualization", "url": "https://www.kaggle.com/learn/data-visualization", "difficulty": 1},
+        {"kind": "article", "title": "Seaborn user guide and tutorial", "url": "https://seaborn.pydata.org/tutorial.html", "difficulty": 2}
+      ],
+      "questions": [
+        {"q": "Which chart best shows the distribution of a single numeric column?", "options": ["Pie chart", "Histogram", "Line chart", "Map"], "answer": 1},
+        {"q": "Which chart best shows the relationship between two numeric variables?", "options": ["Scatter plot", "Bar chart", "Pie chart", "Table"], "answer": 0},
+        {"q": "In Matplotlib, which call displays the figure?", "options": ["plt.draw_now()", "plt.show()", "plt.render()", "plt.print()"], "answer": 1}
+      ]
+    },
+    {
+      "id": "statistics", "name": "Statistics & Probability", "prereqs": ["python"], "difficulty": 2, "hours": 12,
+      "keywords": ["statistics", "probability", "mean", "median", "variance", "distribution", "hypothesis testing"],
+      "youtube_query": "Statistics for data science tutorial",
+      "resources": [
+        {"kind": "article", "title": "Khan Academy: Statistics and probability", "url": "https://www.khanacademy.org/math/statistics-probability", "difficulty": 1},
+        {"kind": "article", "title": "OpenIntro Statistics (free textbook)", "url": "https://www.openintro.org/book/os/", "difficulty": 2}
+      ],
+      "questions": [
+        {"q": "Which measure of center is least affected by outliers?", "options": ["Mean", "Median", "Range", "Variance"], "answer": 1},
+        {"q": "A p-value below 0.05 usually means:", "options": ["The null hypothesis is proven true", "The result is unlikely under the null hypothesis", "The sample is too small", "The data has no outliers"], "answer": 1},
+        {"q": "Standard deviation measures:", "options": ["The middle value", "The spread of values around the mean", "The most frequent value", "The sample size"], "answer": 1}
+      ]
+    },
+    {
+      "id": "sql", "name": "SQL for Analysis", "prereqs": [], "difficulty": 1, "hours": 8,
+      "keywords": ["sql", "queries", "select", "joins", "group by", "aggregation", "database"],
+      "youtube_query": "SQL for data analysis tutorial",
+      "resources": [
+        {"kind": "practice", "title": "Kaggle Learn: Intro to SQL", "url": "https://www.kaggle.com/learn/intro-to-sql", "difficulty": 1},
+        {"kind": "practice", "title": "SQLBolt: interactive SQL lessons", "url": "https://sqlbolt.com/", "difficulty": 1}
+      ],
+      "questions": [
+        {"q": "Which clause filters groups after aggregation?", "options": ["WHERE", "HAVING", "ORDER BY", "LIMIT"], "answer": 1},
+        {"q": "What does COUNT(*) return?", "options": ["The number of rows", "The sum of a column", "The number of columns", "The largest value"], "answer": 0},
+        {"q": "Which keyword removes duplicate rows from a result?", "options": ["UNIQUE", "DISTINCT", "DIFFERENT", "SINGLE"], "answer": 1}
+      ]
+    },
+    {
+      "id": "eda", "name": "Exploratory Data Analysis", "prereqs": ["pandas", "visualization", "statistics"], "difficulty": 2, "hours": 10,
+      "keywords": ["eda", "exploratory data analysis", "data cleaning", "outliers", "correlation", "missing values", "project"],
+      "youtube_query": "exploratory data analysis python project",
+      "resources": [
+        {"kind": "practice", "title": "Kaggle Learn: Data Cleaning", "url": "https://www.kaggle.com/learn/data-cleaning", "difficulty": 2},
+        {"kind": "article", "title": "pandas user guide", "url": "https://pandas.pydata.org/docs/user_guide/index.html", "difficulty": 2}
+      ],
+      "questions": [
+        {"q": "A correlation of -0.9 between two variables means:", "options": ["No relationship", "A strong negative linear relationship", "A weak positive relationship", "One causes the other"], "answer": 1},
+        {"q": "Which plot is commonly used to spot outliers?", "options": ["Box plot", "Pie chart", "Line chart", "Word cloud"], "answer": 0},
+        {"q": "What is usually the first step of EDA?", "options": ["Train a model", "Inspect shape, types and missing values", "Deploy a dashboard", "Tune hyperparameters"], "answer": 1}
+      ]
+    },
+    {
+      "id": "ml_basics", "name": "Machine Learning Basics", "prereqs": ["eda"], "difficulty": 3, "hours": 15,
+      "keywords": ["machine learning", "scikit-learn", "regression", "classification", "train test split", "model"],
+      "youtube_query": "machine learning with scikit-learn tutorial",
+      "resources": [
+        {"kind": "practice", "title": "Kaggle Learn: Intro to Machine Learning", "url": "https://www.kaggle.com/learn/intro-to-machine-learning", "difficulty": 2},
+        {"kind": "article", "title": "scikit-learn: Getting started", "url": "https://scikit-learn.org/stable/getting_started.html", "difficulty": 2}
+      ],
+      "questions": [
+        {"q": "Why do we split data into training and test sets?", "options": ["To train faster", "To measure performance on unseen data", "To remove outliers", "To reduce columns"], "answer": 1},
+        {"q": "Predicting a house price is which type of problem?", "options": ["Classification", "Regression", "Clustering", "Dimensionality reduction"], "answer": 1},
+        {"q": "In scikit-learn, which method trains a model?", "options": ["model.train()", "model.fit()", "model.learn()", "model.run()"], "answer": 1}
+      ]
+    }
+  ]
+}

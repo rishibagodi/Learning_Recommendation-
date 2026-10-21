@@ -49,3 +49,7 @@ pnpm-debug.log*
 *.swo
 Thumbs.db
 .DS_Store
+
+# v2 app
+backend/.env
+backend/*.db

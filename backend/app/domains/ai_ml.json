@@ -1,0 +1,127 @@
+{
+  "id": "ai_ml",
+  "name": "AI / Machine Learning",
+  "description": "Learn machine learning, deep learning and how to build LLM-powered applications.",
+  "goals": [
+    {"id": "ml_fundamentals", "name": "Understand ML fundamentals", "targets": ["model_eval", "ml_unsupervised"]},
+    {"id": "ml_engineer", "name": "Become an ML engineer", "targets": ["model_eval", "ml_unsupervised", "deep_learning"]},
+    {"id": "llm_apps", "name": "Build LLM-powered apps", "targets": ["genai_llm"]}
+  ],
+  "topics": [
+    {
+      "id": "python", "name": "Python for ML", "prereqs": [], "difficulty": 1, "hours": 12,
+      "keywords": ["python", "numpy", "pandas", "functions", "programming", "jupyter"],
+      "youtube_query": "Python for machine learning beginners",
+      "resources": [
+        {"kind": "article", "title": "The Python Tutorial (official docs)", "url": "https://docs.python.org/3/tutorial/", "difficulty": 1},
+        {"kind": "practice", "title": "Kaggle Learn: Python", "url": "https://www.kaggle.com/learn/python", "difficulty": 1}
+      ],
+      "questions": [
+        {"q": "What does len({'a': 1, 'b': 2}) return?", "options": ["1", "2", "3", "4"], "answer": 1},
+        {"q": "Which library is the standard for numerical arrays in Python?", "options": ["NumPy", "Flask", "Requests", "Tkinter"], "answer": 0},
+        {"q": "What does def do in Python?", "options": ["Defines a function", "Deletes a variable", "Declares a class", "Imports a module"], "answer": 0}
+      ]
+    },
+    {
+      "id": "math", "name": "Math for ML", "prereqs": [], "difficulty": 2, "hours": 15,
+      "keywords": ["linear algebra", "vectors", "matrices", "calculus", "derivatives", "gradient", "probability"],
+      "youtube_query": "math for machine learning linear algebra calculus",
+      "resources": [
+        {"kind": "article", "title": "Khan Academy: Linear algebra", "url": "https://www.khanacademy.org/math/linear-algebra", "difficulty": 1},
+        {"kind": "article", "title": "Mathematics for Machine Learning (free book)", "url": "https://mml-book.github.io/", "difficulty": 3}
+      ],
+      "questions": [
+        {"q": "Multiplying a (2x3) matrix by a (3x4) matrix gives a matrix of shape:", "options": ["(3x3)", "(2x4)", "(4x2)", "Not possible"], "answer": 1},
+        {"q": "The gradient of a function points in the direction of:", "options": ["Steepest increase", "Steepest decrease", "Zero change", "The origin"], "answer": 0},
+        {"q": "What is the dot product of [1, 2] and [3, 4]?", "options": ["10", "11", "7", "[3, 8]"], "answer": 1}
+      ]
+    },
+    {
+      "id": "ml_supervised", "name": "Supervised Learning", "prereqs": ["python", "math"], "difficulty": 2, "hours": 15,
+      "keywords": ["supervised learning", "linear regression", "logistic regression", "decision tree", "random forest", "classification", "scikit-learn"],
+      "youtube_query": "supervised learning regression classification tutorial",
+      "resources": [
+        {"kind": "article", "title": "Google Machine Learning Crash Course", "url": "https://developers.google.com/machine-learning/crash-course", "difficulty": 1},
+        {"kind": "article", "title": "scikit-learn: Supervised learning", "url": "https://scikit-learn.org/stable/supervised_learning.html", "difficulty": 2},
+        {"kind": "practice", "title": "Kaggle Learn: Intro to Machine Learning", "url": "https://www.kaggle.com/learn/intro-to-machine-learning", "difficulty": 1}
+      ],
+      "questions": [
+        {"q": "Logistic regression is mainly used for:", "options": ["Regression of prices", "Binary classification", "Clustering", "Image generation"], "answer": 1},
+        {"q": "Supervised learning requires:", "options": ["Labelled data", "No data", "Only images", "A GPU"], "answer": 0},
+        {"q": "A random forest combines many:", "options": ["Neural networks", "Decision trees", "Clusters", "Linear equations"], "answer": 1}
+      ]
+    },
+    {
+      "id": "ml_unsupervised", "name": "Unsupervised Learning", "prereqs": ["ml_supervised"], "difficulty": 2, "hours": 8,
+      "keywords": ["unsupervised learning", "clustering", "k-means", "pca", "dimensionality reduction", "anomaly detection"],
+      "youtube_query": "unsupervised learning k-means PCA tutorial",
+      "resources": [
+        {"kind": "article", "title": "scikit-learn: Clustering", "url": "https://scikit-learn.org/stable/modules/clustering.html", "difficulty": 2},
+        {"kind": "practice", "title": "Kaggle Learn: Feature Engineering (k-means, PCA)", "url": "https://www.kaggle.com/learn/feature-engineering", "difficulty": 2}
+      ],
+      "questions": [
+        {"q": "K-Means groups data points by:", "options": ["Their labels", "Distance to cluster centres", "Alphabetical order", "Random assignment only"], "answer": 1},
+        {"q": "PCA is mainly used for:", "options": ["Dimensionality reduction", "Classification", "Data collection", "Encryption"], "answer": 0},
+        {"q": "Which metric helps choose the number of clusters?", "options": ["Accuracy", "Silhouette score", "F1 score", "BLEU score"], "answer": 1}
+      ]
+    },
+    {
+      "id": "model_eval", "name": "Model Evaluation & Tuning", "prereqs": ["ml_supervised"], "difficulty": 2, "hours": 8,
+      "keywords": ["model evaluation", "cross validation", "precision", "recall", "overfitting", "hyperparameter tuning", "feature engineering"],
+      "youtube_query": "model evaluation cross validation precision recall overfitting",
+      "resources": [
+        {"kind": "article", "title": "scikit-learn: Model evaluation", "url": "https://scikit-learn.org/stable/modules/model_evaluation.html", "difficulty": 2},
+        {"kind": "practice", "title": "Kaggle Learn: Intermediate Machine Learning", "url": "https://www.kaggle.com/learn/intermediate-machine-learning", "difficulty": 2}
+      ],
+      "questions": [
+        {"q": "A model that does very well on training data but badly on test data is:", "options": ["Underfitting", "Overfitting", "Well-generalised", "Regularised"], "answer": 1},
+        {"q": "Recall measures:", "options": ["Correct positives out of all actual positives", "Correct positives out of all predicted positives", "Overall accuracy", "Training speed"], "answer": 0},
+        {"q": "k-fold cross-validation:", "options": ["Trains once on all data", "Rotates which part of the data is used for validation", "Removes k features", "Uses k GPUs"], "answer": 1}
+      ]
+    },
+    {
+      "id": "deep_learning", "name": "Deep Learning", "prereqs": ["model_eval", "math"], "difficulty": 3, "hours": 20,
+      "keywords": ["deep learning", "neural networks", "backpropagation", "pytorch", "tensorflow", "cnn", "activation"],
+      "youtube_query": "deep learning neural networks tutorial pytorch",
+      "resources": [
+        {"kind": "practice", "title": "Kaggle Learn: Intro to Deep Learning", "url": "https://www.kaggle.com/learn/intro-to-deep-learning", "difficulty": 2},
+        {"kind": "article", "title": "PyTorch tutorials", "url": "https://pytorch.org/tutorials/", "difficulty": 2},
+        {"kind": "article", "title": "Dive into Deep Learning (free book)", "url": "https://d2l.ai/", "difficulty": 3}
+      ],
+      "questions": [
+        {"q": "Backpropagation is used to:", "options": ["Compute gradients to update weights", "Load data", "Draw the network", "Split the dataset"], "answer": 0},
+        {"q": "Which activation function outputs max(0, x)?", "options": ["Sigmoid", "Tanh", "ReLU", "Softmax"], "answer": 2},
+        {"q": "CNNs are especially suited for:", "options": ["Tabular data only", "Images", "SQL queries", "Sorting lists"], "answer": 1}
+      ]
+    },
+    {
+      "id": "nlp_transformers", "name": "NLP & Transformers", "prereqs": ["deep_learning"], "difficulty": 3, "hours": 12,
+      "keywords": ["nlp", "transformers", "attention", "tokenization", "embeddings", "bert", "hugging face"],
+      "youtube_query": "transformers attention NLP explained tutorial",
+      "resources": [
+        {"kind": "article", "title": "The Illustrated Transformer", "url": "https://jalammar.github.io/illustrated-transformer/", "difficulty": 2},
+        {"kind": "practice", "title": "Hugging Face Learn (free courses)", "url": "https://huggingface.co/learn", "difficulty": 2}
+      ],
+      "questions": [
+        {"q": "The key mechanism inside a Transformer is:", "options": ["Convolution", "Self-attention", "Recurrence only", "Decision trees"], "answer": 1},
+        {"q": "Tokenization means:", "options": ["Splitting text into units the model processes", "Encrypting text", "Translating text", "Summarising text"], "answer": 0},
+        {"q": "Word embeddings represent words as:", "options": ["Images", "Dense numeric vectors", "SQL rows", "Single integers only"], "answer": 1}
+      ]
+    },
+    {
+      "id": "genai_llm", "name": "Generative AI & LLM Apps", "prereqs": ["nlp_transformers"], "difficulty": 3, "hours": 12,
+      "keywords": ["llm", "generative ai", "prompt engineering", "rag", "retrieval", "langchain", "vector database", "agents"],
+      "youtube_query": "build LLM app RAG tutorial",
+      "resources": [
+        {"kind": "article", "title": "Prompt Engineering Guide", "url": "https://www.promptingguide.ai/", "difficulty": 1},
+        {"kind": "article", "title": "OpenAI Cookbook", "url": "https://cookbook.openai.com/", "difficulty": 2},
+        {"kind": "practice", "title": "DeepLearning.AI short courses", "url": "https://www.deeplearning.ai/short-courses/", "difficulty": 2}
+      ],
+      "questions": [
+        {"q": "RAG (Retrieval-Augmented Generation) improves answers by:", "options": ["Retrieving relevant documents and adding them to the prompt", "Training a new model from scratch", "Removing the prompt", "Compressing the model"], "answer": 0},
+        {"q": "A vector database is used to:", "options": ["Store embeddings for similarity search", "Store images only", "Run SQL joins faster", "Host websites"], "answer": 0},
+        {"q": "An LLM 'hallucination' is:", "options": ["A confident but incorrect output", "A slow response", "A crash", "A token limit"], "answer": 0}
+      ]
+    }
+  ]
+}

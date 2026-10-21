@@ -1,0 +1,128 @@
+{
+  "id": "web_dev",
+  "name": "Web Development",
+  "description": "Build websites and web apps, from HTML and CSS to React and Node.js.",
+  "goals": [
+    {"id": "first_website", "name": "Build my first website", "targets": ["dom", "git"]},
+    {"id": "frontend", "name": "Become a frontend developer", "targets": ["react", "git"]},
+    {"id": "fullstack", "name": "Become a full-stack developer", "targets": ["react", "node", "databases", "git"]}
+  ],
+  "topics": [
+    {
+      "id": "html", "name": "HTML Fundamentals", "prereqs": [], "difficulty": 1, "hours": 6,
+      "keywords": ["html", "tags", "elements", "forms", "semantic", "markup", "web page"],
+      "youtube_query": "HTML tutorial for beginners",
+      "resources": [
+        {"kind": "article", "title": "MDN Web Docs: HTML", "url": "https://developer.mozilla.org/en-US/docs/Web/HTML", "difficulty": 1},
+        {"kind": "practice", "title": "freeCodeCamp: Responsive Web Design certification", "url": "https://www.freecodecamp.org/learn", "difficulty": 1}
+      ],
+      "questions": [
+        {"q": "Which tag creates a hyperlink?", "options": ["<link>", "<a>", "<href>", "<url>"], "answer": 1},
+        {"q": "Which element is the most semantic choice for a site's main navigation links?", "options": ["<div>", "<section>", "<nav>", "<span>"], "answer": 2},
+        {"q": "Which attribute gives an image alternative text for screen readers?", "options": ["title", "src", "alt", "label"], "answer": 2}
+      ]
+    },
+    {
+      "id": "css", "name": "CSS & Layout", "prereqs": ["html"], "difficulty": 1, "hours": 10,
+      "keywords": ["css", "styling", "flexbox", "grid", "selectors", "box model", "responsive"],
+      "youtube_query": "CSS tutorial flexbox grid for beginners",
+      "resources": [
+        {"kind": "article", "title": "MDN Web Docs: CSS", "url": "https://developer.mozilla.org/en-US/docs/Web/CSS", "difficulty": 1},
+        {"kind": "practice", "title": "Flexbox Froggy (game)", "url": "https://flexboxfroggy.com/", "difficulty": 1},
+        {"kind": "practice", "title": "CSS Grid Garden (game)", "url": "https://cssgridgarden.com/", "difficulty": 2}
+      ],
+      "questions": [
+        {"q": "In the CSS box model, which layer sits between the content and the border?", "options": ["margin", "padding", "outline", "inset"], "answer": 1},
+        {"q": "Which property turns an element into a flex container?", "options": ["display: flex", "flex: 1", "position: flex", "float: flex"], "answer": 0},
+        {"q": "Which selector has the highest specificity?", "options": [".card", "div", "#header", "div p"], "answer": 2}
+      ]
+    },
+    {
+      "id": "javascript", "name": "JavaScript Basics", "prereqs": ["html"], "difficulty": 2, "hours": 15,
+      "keywords": ["javascript", "variables", "functions", "arrays", "objects", "loops", "es6"],
+      "youtube_query": "JavaScript tutorial for beginners",
+      "resources": [
+        {"kind": "article", "title": "The Modern JavaScript Tutorial (javascript.info)", "url": "https://javascript.info/", "difficulty": 1},
+        {"kind": "article", "title": "MDN: JavaScript Guide", "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide", "difficulty": 2},
+        {"kind": "practice", "title": "Exercism: JavaScript track", "url": "https://exercism.org/tracks/javascript", "difficulty": 2}
+      ],
+      "questions": [
+        {"q": "Which keyword declares a variable that cannot be reassigned?", "options": ["var", "let", "const", "static"], "answer": 2},
+        {"q": "What does [1, 2, 3].map(x => x * 2) return?", "options": ["[2, 4, 6]", "6", "[1, 2, 3]", "undefined"], "answer": 0},
+        {"q": "What is the result of typeof null in JavaScript?", "options": ["\"null\"", "\"undefined\"", "\"object\"", "\"number\""], "answer": 2}
+      ]
+    },
+    {
+      "id": "dom", "name": "DOM & Events", "prereqs": ["javascript", "css"], "difficulty": 2, "hours": 8,
+      "keywords": ["dom", "events", "querySelector", "event listener", "manipulation", "browser"],
+      "youtube_query": "JavaScript DOM manipulation tutorial",
+      "resources": [
+        {"kind": "article", "title": "MDN: Document Object Model (DOM)", "url": "https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model", "difficulty": 2},
+        {"kind": "article", "title": "javascript.info: Document", "url": "https://javascript.info/document", "difficulty": 2},
+        {"kind": "practice", "title": "JavaScript30: 30 small projects", "url": "https://javascript30.com/", "difficulty": 2}
+      ],
+      "questions": [
+        {"q": "Which method selects the first element matching a CSS selector?", "options": ["getElementsByClassName", "querySelector", "querySelectorAll", "getElementByName"], "answer": 1},
+        {"q": "How do you run a function when a button is clicked?", "options": ["button.on('click', fn)", "button.addEventListener('click', fn)", "button.click = fn()", "button.listen(fn)"], "answer": 1},
+        {"q": "Which call stops a form from reloading the page on submit?", "options": ["event.stopPropagation()", "event.preventDefault()", "return true", "form.cancel()"], "answer": 1}
+      ]
+    },
+    {
+      "id": "git", "name": "Git & GitHub", "prereqs": [], "difficulty": 1, "hours": 5,
+      "keywords": ["git", "github", "version control", "commit", "branch", "merge", "pull request"],
+      "youtube_query": "Git and GitHub tutorial for beginners",
+      "resources": [
+        {"kind": "article", "title": "Pro Git book (free)", "url": "https://git-scm.com/book/en/v2", "difficulty": 2},
+        {"kind": "practice", "title": "Learn Git Branching (interactive)", "url": "https://learngitbranching.js.org/", "difficulty": 1}
+      ],
+      "questions": [
+        {"q": "Which command creates a new branch and switches to it?", "options": ["git branch -d dev", "git checkout -b dev", "git merge dev", "git push dev"], "answer": 1},
+        {"q": "Which command stages changes for the next commit?", "options": ["git commit", "git add", "git stash", "git log"], "answer": 1},
+        {"q": "What does git pull do?", "options": ["Uploads local commits", "Fetches and merges remote changes", "Deletes the remote branch", "Creates a pull request"], "answer": 1}
+      ]
+    },
+    {
+      "id": "react", "name": "React", "prereqs": ["dom"], "difficulty": 2, "hours": 20,
+      "keywords": ["react", "components", "jsx", "props", "state", "hooks", "useState", "useEffect"],
+      "youtube_query": "React tutorial for beginners",
+      "resources": [
+        {"kind": "article", "title": "react.dev: Learn React", "url": "https://react.dev/learn", "difficulty": 2},
+        {"kind": "practice", "title": "react.dev: Tic-Tac-Toe tutorial", "url": "https://react.dev/learn/tutorial-tic-tac-toe", "difficulty": 2}
+      ],
+      "questions": [
+        {"q": "Which hook adds local state to a function component?", "options": ["useEffect", "useState", "useRef", "useMemo"], "answer": 1},
+        {"q": "How does a parent pass data to a child component?", "options": ["Through props", "Through the DOM", "Through CSS", "Through localStorage only"], "answer": 0},
+        {"q": "Why should list items rendered with map() have a key prop?", "options": ["For styling", "So React can track which items changed", "To make them clickable", "It is required by HTML"], "answer": 1}
+      ]
+    },
+    {
+      "id": "node", "name": "Node.js & Express", "prereqs": ["javascript"], "difficulty": 2, "hours": 15,
+      "keywords": ["node", "nodejs", "express", "server", "rest api", "npm", "backend", "routes"],
+      "youtube_query": "Node.js Express tutorial build REST API",
+      "resources": [
+        {"kind": "article", "title": "Node.js: Learn", "url": "https://nodejs.org/en/learn", "difficulty": 2},
+        {"kind": "article", "title": "Express: Getting started", "url": "https://expressjs.com/en/starter/installing.html", "difficulty": 2},
+        {"kind": "practice", "title": "NodeSchool workshops", "url": "https://nodeschool.io/", "difficulty": 2}
+      ],
+      "questions": [
+        {"q": "Which command creates a package.json for a new Node project?", "options": ["node init", "npm init", "npm start", "node new"], "answer": 1},
+        {"q": "In Express, which method handles an HTTP GET request to /users?", "options": ["app.get('/users', handler)", "app.fetch('/users', handler)", "app.read('/users', handler)", "app.route.get(handler)"], "answer": 0},
+        {"q": "Which HTTP status code means 'resource created'?", "options": ["200", "201", "404", "500"], "answer": 1}
+      ]
+    },
+    {
+      "id": "databases", "name": "Databases & SQL", "prereqs": ["node"], "difficulty": 2, "hours": 10,
+      "keywords": ["sql", "database", "postgresql", "mysql", "mongodb", "queries", "tables", "joins"],
+      "youtube_query": "SQL database tutorial for beginners",
+      "resources": [
+        {"kind": "practice", "title": "SQLBolt: interactive SQL lessons", "url": "https://sqlbolt.com/", "difficulty": 1},
+        {"kind": "article", "title": "PostgreSQL tutorial (official docs)", "url": "https://www.postgresql.org/docs/current/tutorial.html", "difficulty": 2}
+      ],
+      "questions": [
+        {"q": "Which SQL clause filters rows?", "options": ["ORDER BY", "WHERE", "GROUP BY", "SELECT"], "answer": 1},
+        {"q": "What does a PRIMARY KEY guarantee?", "options": ["Each value is unique and not null", "Values are sorted", "The column is encrypted", "The table is indexed by date"], "answer": 0},
+        {"q": "Which JOIN returns only rows with matches in both tables?", "options": ["LEFT JOIN", "FULL JOIN", "INNER JOIN", "CROSS JOIN"], "answer": 2}
+      ]
+    }
+  ]
+}

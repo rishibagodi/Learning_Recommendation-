@@ -1,143 +1,86 @@
-/**
- * API client for the OULAD Learning Resource Recommender backend.
- */
+/** Typed client for the v2 backend. The login token lives in localStorage. */
 
-const BASE = '/api';
+const TOKEN_KEY = 'lrs_token';
 
-async function fetchJSON<T>(url: string): Promise<T> {
-  const resp = await fetch(url);
+export const getToken = () => {
+  try { return localStorage.getItem(TOKEN_KEY); } catch { return null; }
+};
+export const setToken = (t: string | null) => {
+  try { t ? localStorage.setItem(TOKEN_KEY, t) : localStorage.removeItem(TOKEN_KEY); } catch { /* storage blocked */ }
+};
+
+async function call<T>(method: string, url: string, body?: unknown): Promise<T> {
+  const token = getToken();
+  const resp = await fetch(`/api${url}`, {
+    method,
+    headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  const data = await resp.json().catch(() => ({}));
+  if (resp.status === 401 && token) setToken(null);
   if (!resp.ok) {
-    const text = await resp.text();
-    throw new Error(`API error ${resp.status}: ${text}`);
+    const d = data.detail;
+    throw new Error(typeof d === 'string' ? d : Array.isArray(d) ? d.map((e: { msg: string }) => e.msg).join(', ') : `Error ${resp.status}`);
   }
-  return resp.json() as Promise<T>;
+  return data as T;
 }
 
-/* ---------- Types ---------- */
+/* ---------- types ---------- */
 
-export interface StudentSummary {
-  id_student: number;
-  gender: string;
-  region: string;
-  highest_education: string;
-  age_band: string;
-  final_result: string;
-  cluster_label: number | null;
-  cluster_name: string;
+export type Format = 'video' | 'article' | 'practice';
+export type Level = 'beginner' | 'intermediate' | 'advanced';
+
+export interface User { id: number; name: string; email: string }
+export interface Profile {
+  domain: string; goal: string; level: Level; format: Format;
+  hours_per_week: number; days_per_week: number; likes_discussion: number;
+  cluster_id: number | null; cluster_name: string; cluster_source: string;
 }
-
-export interface StudentListResponse {
-  total: number;
-  offset: number;
-  limit: number;
-  students: StudentSummary[];
+export interface Me {
+  user: User; stage: 'onboarding' | 'quiz' | 'ready'; profile: Profile | null;
+  model: { type: string; students?: number; clusters?: number; silhouette?: number };
 }
+export interface Domain { id: string; name: string; description: string; goals: { id: string; name: string }[]; topics: string[] }
+export interface Question { id: string; topic: string; q: string; options: string[] }
+export interface SkillResult { topic: string; correct: number; total: number; result: string }
 
-export interface WeakTopic {
-  code_module: string;
-  module_avg_score: number;
-  student_avg_score: number;
-  is_weak: boolean;
+export type StepStatus = 'locked' | 'available' | 'revise' | 'completed' | 'skipped';
+export interface Step {
+  topic_key: string; name: string; position: number; status: StepStatus; difficulty: number;
+  hours: number; weeks: number; prereqs: string[]; skill_score: string | null; step_score: string | null;
 }
-
-export interface PaceStats {
-  avg_active_days: number;
-  avg_clicks_per_active_day: number;
-  pct_structured_content: number;
-  pct_interactive_quiz: number;
-  pct_discussion_social: number;
-  pct_other: number;
+export interface Roadmap {
+  domain: string; goal: string; steps: Step[]; progress_pct: number;
+  total_hours: number; remaining_hours: number; remaining_weeks: number;
 }
-
-export interface StudentProfile {
-  id_student: number;
-  gender: string;
-  region: string;
-  highest_education: string;
-  age_band: string;
-  final_result: string;
-  cluster_label: number | null;
-  cluster_name: string;
-  pace_stats: PaceStats;
-  weak_topics: WeakTopic[];
+export interface Resource {
+  id: number; kind: Format; source: string; title: string; url: string; channel: string | null;
+  thumbnail: string | null; duration_min: number | null; views: number | null; difficulty: number;
+  score: number; why: string; done: number; helpful: number | null;
 }
-
-export interface Recommendation {
-  id_site: number;
-  activity_type: string;
-  topic: string;
-  bucket: string;
-  score: number;
-  explanation: string;
+export interface StepDetail extends Step {
+  keywords: string[]; warning: string | null; reason: string; recommended: Resource[]; completed: Resource[];
 }
+export interface QuizResult { correct: number; total: number; passed: boolean; next: Step | null }
 
-export interface RecommendationResponse {
-  id_student: number;
-  n: number;
-  recommendations: Recommendation[];
-}
+/* ---------- endpoints ---------- */
 
-export interface ClusterCentroid {
-  cluster_id: number;
-  cluster_name: string;
-  pct_structured_content: number;
-  pct_interactive_quiz: number;
-  pct_discussion_social: number;
-  pct_other: number;
-  active_days: number;
-  clicks_per_active_day: number;
-}
-
-export interface ClusterStudent {
-  id_student: number;
-  cluster_label: number;
-  pca_x: number;
-  pca_y: number;
-}
-
-export interface ElbowData {
-  k_values: number[];
-  inertias: number[];
-  silhouette_scores: number[];
-}
-
-export interface ClustersResponse {
-  k: number;
-  silhouette_score: number;
-  elbow_data: ElbowData;
-  centroids: ClusterCentroid[];
-  students: ClusterStudent[];
-}
-
-export interface EvalVariant {
-  precision_at_k: number;
-  recall_at_k: number;
-  num_students_evaluated: number;
-}
-
-export interface EvaluationResponse {
-  hybrid: EvalVariant;
-  content_only: EvalVariant;
-}
-
-/* ---------- API functions ---------- */
-
-export function getStudents(limit = 100, offset = 0): Promise<StudentListResponse> {
-  return fetchJSON(`${BASE}/students?limit=${limit}&offset=${offset}`);
-}
-
-export function getStudent(id: number): Promise<StudentProfile> {
-  return fetchJSON(`${BASE}/students/${id}`);
-}
-
-export function getRecommendations(id: number, n = 5): Promise<RecommendationResponse> {
-  return fetchJSON(`${BASE}/students/${id}/recommendations?n=${n}`);
-}
-
-export function getClusters(): Promise<ClustersResponse> {
-  return fetchJSON(`${BASE}/clusters`);
-}
-
-export function getEvaluation(): Promise<EvaluationResponse> {
-  return fetchJSON(`${BASE}/evaluation`);
-}
+type AuthResp = { token: string; user: User };
+export const api = {
+  signup: (name: string, email: string, password: string) => call<AuthResp>('POST', '/auth/signup', { name, email, password }),
+  login: (email: string, password: string) => call<AuthResp>('POST', '/auth/login', { email, password }),
+  me: () => call<Me>('GET', '/me'),
+  domains: () => call<Domain[]>('GET', '/domains'),
+  onboarding: (body: Omit<Profile, 'cluster_id' | 'cluster_name' | 'cluster_source' | 'likes_discussion'> & { likes_discussion: boolean }) =>
+    call<Profile>('POST', '/onboarding', body),
+  skillQuiz: () => call<Question[]>('GET', '/quiz/skill'),
+  submitSkillQuiz: (answers: Record<string, number>) => call<SkillResult[]>('POST', '/quiz/skill', { answers }),
+  restart: () => call<{ ok: boolean }>('DELETE', '/profile'),
+  roadmap: () => call<Roadmap>('GET', '/roadmap'),
+  step: (key: string) => call<StepDetail>('GET', `/steps/${encodeURIComponent(key)}`),
+  stepQuiz: (key: string) => call<Question[]>('GET', `/steps/${encodeURIComponent(key)}/quiz`),
+  submitStepQuiz: (key: string, answers: Record<string, number>) =>
+    call<QuizResult>('POST', `/steps/${encodeURIComponent(key)}/quiz`, { answers }),
+  progress: (id: number, done: boolean, helpful: boolean | null = null) =>
+    call<{ ok: boolean }>('POST', `/resources/${id}/progress`, { done, helpful }),
+};
